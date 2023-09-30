@@ -1,0 +1,54 @@
+{{ define "todo" -}}
+<div class="flex justify-between bg-gray-100 p-2 rounded-md shadow-sm" id="todo-{{.ID}}">
+  <input type="hidden" name="id" value="{{.ID}}" />
+  <span class="select-none">{{.Text}}</span>
+  <input
+    type="checkbox"
+    {{if
+    .Done}}
+    checked
+    {{end}}
+    hx-trigger="change"
+    hx-swap="outerHTML"
+    hx-target="#todo-{{.ID}}"
+    hx-put="/todos/{{.ID}}/toggle"
+  />
+</div>
+{{- end}} {{ define "todos" -}}
+<form class="sortable flex flex-col gap-2 w-full" id="todos" hx-post="/todos/reorder" hx-trigger="end" hx-swap="outerHTML">
+  {{range .Todos}} {{template "todo" .}} {{end}}
+</form>
+{{- end}} {{ define "create" -}}
+<form
+  class="grid grid-cols-[1fr,auto] gap-2"
+  hx-post="/todos"
+  hx-swap="outerHTML"
+  hx-target="#todos"
+  hx-on::after-request="this.reset()"
+>
+  <input autocomplete="off" class="p-2" type="text" name="text" placeholder="What needs to be done?" />
+  <button type="submit">Add</button>
+</form>
+{{- end}} {{ define "index" }}
+<head>
+  <title>Todo App</title>
+  <script src="https://unpkg.com/htmx.org@1.9.6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<script>
+htmx.onLoad(() => {
+    const el = document.querySelector('.sortable');
+    const sortable = new Sortable(el, {
+        animation: 150,
+        ghostClass: 'bg-blue-100',
+    })
+})
+</script>
+<body class="flex items-center gap-4 p-4 justify-center">
+  <div class="w-[400px] border p-4 shadow-lg flex flex-col gap-4 p-4">
+    <h1 class="text-2xl" >Todo App</h1>
+    {{template "todos" .}} {{template "create" .}}
+  </div>
+</body>
+{{end}}
