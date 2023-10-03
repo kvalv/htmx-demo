@@ -1,7 +1,7 @@
 {{ define "todo" -}}
-<div class="flex justify-between bg-gray-100 p-2 rounded-md shadow-sm" id="todo-{{.ID}}">
+<div class="grid grid-cols-[1fr,auto,auto] gap-2 align-center bg-gray-100 p-2 rounded-md shadow-sm " id="todo-{{.ID}}">
   <input type="hidden" name="id" value="{{.ID}}" />
-  <span class="select-none">{{.Text}}</span>
+  <span class="select-none my-auto">{{.Text}}</span>
   <input
     type="checkbox"
     {{if
@@ -13,6 +13,15 @@
     hx-target="#todo-{{.ID}}"
     hx-put="/todos/{{.ID}}/toggle"
   />
+  <input
+    type="button"
+    value="Delete"
+    class="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded-md shadow-sm"
+    hx-delete="/todos/{{.ID}}"
+    hx-confirm="Are you sure?"
+    hx-swap="outerHTML"
+    hx-target="#todo-{{.ID}}"
+    />
 </div>
 {{- end}} {{ define "todos" -}}
 <form class="sortable flex flex-col gap-2 w-full" id="todos" hx-post="/todos/reorder" hx-trigger="end" hx-swap="outerHTML">
