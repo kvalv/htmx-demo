@@ -1,13 +1,13 @@
 {{ define "todo" -}}
-<div class="grid grid-cols-[1fr,auto,auto] gap-2 align-center bg-gray-100 p-2 rounded-md shadow-sm " id="todo-{{.ID}}">
+<div 
+    sse-swap="change-{{.ID}}"
+    class="grid grid-cols-[1fr,auto,auto] gap-2 align-center bg-gray-100 p-2 rounded-md shadow-sm " 
+    id="todo-{{.ID}}">
   <input type="hidden" name="id" value="{{.ID}}" />
   <span class="select-none my-auto">{{.Text}}</span>
   <input
     type="checkbox"
-    {{if
-    .Done}}
-    checked
-    {{end}}
+    {{if .Done}} checked {{end}} 
     hx-trigger="change"
     hx-swap="outerHTML"
     hx-target="#todo-{{.ID}}"
@@ -24,7 +24,10 @@
     />
 </div>
 {{- end}} {{ define "todos" -}}
-<form class="sortable flex flex-col gap-2 w-full" id="todos" hx-post="/todos/reorder" hx-trigger="end" hx-swap="outerHTML">
+<form 
+    class="sortable flex flex-col gap-2 w-full" id="todos" hx-post="/todos/reorder" hx-trigger="end" hx-swap="outerHTML"
+    hx-ext="sse" sse-connect="/events"
+>
   {{range .Todos}} {{template "todo" .}} {{end}}
 </form>
 {{- end}} {{ define "create" -}}
@@ -42,6 +45,7 @@
 <head>
   <title>Todo App</title>
   <script src="https://unpkg.com/htmx.org@1.9.6"></script>
+  <script src="https://unpkg.com/htmx.org/dist/ext/sse.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>

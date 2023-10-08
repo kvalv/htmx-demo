@@ -1,6 +1,5 @@
 package todo
 
-
 type List struct {
 	list []*Todo
 }
@@ -33,15 +32,15 @@ func (t *List) Add(text string) {
 }
 
 func (t *List) Remove(index int) {
-    var newList []*Todo
-    for _, v := range t.list {
-        if v.ID != index {
-            newList = append(newList, v)
-        }
-    }
-    t.list = newList
+	var newList []*Todo
+	for _, v := range t.list {
+		if v.ID != index {
+			newList = append(newList, v)
+		}
+	}
+	t.list = newList
 }
 
 func (t *List) Toggle(id int) {
-    t.Get(id).Toggle()
+	t.Get(id).Toggle()
 }
